@@ -1,4 +1,7 @@
+import { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { useResume } from '@/hooks/useResume';
+import { useAuth } from '@/contexts/AuthContext';
 import { PersonalInfoForm } from '@/components/resume/PersonalInfoForm';
 import { SummaryForm } from '@/components/resume/SummaryForm';
 import { ExperienceForm } from '@/components/resume/ExperienceForm';
@@ -6,10 +9,14 @@ import { EducationForm } from '@/components/resume/EducationForm';
 import { SkillsForm } from '@/components/resume/SkillsForm';
 import { ResumePreview } from '@/components/resume/ResumePreview';
 import { ATSMatcher } from '@/components/resume/ATSMatcher';
+import { DownloadButton } from '@/components/resume/DownloadButton';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { FileText, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { FileText, Sparkles, LogIn, LogOut, User } from 'lucide-react';
 
 const Index = () => {
+  const previewRef = useRef<HTMLDivElement>(null);
+  const { user, signOut } = useAuth();
   const {
     resume,
     updatePersonalInfo,
@@ -38,9 +45,30 @@ const Index = () => {
               <p className="text-xs text-muted-foreground">AI-Powered Resume Builder</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Sparkles className="h-4 w-4 text-accent" />
-            <span>Powered by AI</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Sparkles className="h-4 w-4 text-accent" />
+              <span className="hidden sm:inline">Powered by AI</span>
+            </div>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-muted-foreground hidden sm:flex items-center gap-1">
+                  <User className="h-4 w-4" />
+                  {user.email}
+                </span>
+                <Button variant="outline" size="sm" onClick={signOut}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <Button asChild variant="outline" size="sm">
+                <Link to="/auth">
+                  <LogIn className="h-4 w-4 mr-2" />
+                  Sign In
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -87,16 +115,21 @@ const Index = () => {
           {/* Preview Section */}
           <div className="lg:sticky lg:top-24 h-fit">
             <div className="rounded-xl overflow-hidden shadow-xl border border-border bg-card">
-              <div className="p-3 border-b border-border bg-muted/50 flex items-center gap-2">
-                <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red-500" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                  <div className="w-3 h-3 rounded-full bg-green-500" />
+              <div className="p-3 border-b border-border bg-muted/50 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                  </div>
+                  <span className="text-xs text-muted-foreground ml-2">Live Preview</span>
                 </div>
-                <span className="text-xs text-muted-foreground ml-2">Live Preview</span>
+                <DownloadButton data={resume} previewRef={previewRef} />
               </div>
               <div className="p-4 bg-slate-100 max-h-[calc(100vh-200px)] overflow-y-auto">
-                <ResumePreview data={resume} />
+                <div ref={previewRef}>
+                  <ResumePreview data={resume} />
+                </div>
               </div>
             </div>
           </div>
