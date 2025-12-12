@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Upload, Plus, LogIn, LogOut, User, ArrowLeft, Layout, Minimize2, Palette } from 'lucide-react';
+import { FileText, Upload, Plus, LogIn, LogOut, User, ArrowLeft, Layout, Minimize2, Palette, Clock, Trash2 } from 'lucide-react';
+import { fetchUserResumes, deleteResume, SavedResume } from '@/services/resumeService';
+import { toast } from 'sonner';
+import { format } from 'date-fns';
 
 export type TemplateType = 'minimal' | 'modern' | 'classic';
 
@@ -32,9 +35,49 @@ export default function CreateResume() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>('modern');
+  const [savedResumes, setSavedResumes] = useState<SavedResume[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      loadSavedResumes();
+    }
+  }, [user]);
+
+  const loadSavedResumes = async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      const resumes = await fetchUserResumes(user.id);
+      setSavedResumes(resumes);
+    } catch (error) {
+      console.error('Error loading resumes:', error);
+      toast.error('Failed to load saved resumes');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCreateNew = () => {
     navigate(`/builder?template=${selectedTemplate}`);
+  };
+
+  const handleEditResume = (resumeId: string) => {
+    navigate(`/builder?resumeId=${resumeId}&template=${selectedTemplate}`);
+  };
+
+  const handleDeleteResume = async (resumeId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) return;
+    
+    try {
+      await deleteResume(resumeId, user.id);
+      setSavedResumes(prev => prev.filter(r => r.id !== resumeId));
+      toast.success('Resume deleted successfully');
+    } catch (error) {
+      console.error('Error deleting resume:', error);
+      toast.error('Failed to delete resume');
+    }
   };
 
   return (
@@ -84,9 +127,57 @@ export default function CreateResume() {
 
       {/* Main Content */}
       <main className="container px-4 py-12">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
+          {/* Saved Resumes Section */}
+          {user && savedResumes.length > 0 && (
+            <div className="mb-12">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold text-foreground mb-2">Your Resumes</h2>
+                <p className="text-muted-foreground">Continue editing your saved resumes</p>
+              </div>
+              
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {savedResumes.map((resume) => (
+                  <Card
+                    key={resume.id}
+                    className="cursor-pointer hover:shadow-lg transition-all border-border/50 hover:border-primary/50 group"
+                    onClick={() => handleEditResume(resume.id)}
+                  >
+                    <CardContent className="p-5">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="p-2 rounded-lg bg-primary/10">
+                          <FileText className="h-5 w-5 text-primary" />
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={(e) => handleDeleteResume(resume.id, e)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <h3 className="font-semibold text-foreground mb-1 truncate">
+                        {resume.personal_info?.fullName || 'Untitled Resume'}
+                      </h3>
+                      <p className="text-sm text-muted-foreground truncate mb-3">
+                        {resume.personal_info?.email || 'No email'}
+                      </p>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <Clock className="h-3 w-3" />
+                        <span>Updated {format(new Date(resume.updated_at), 'MMM d, yyyy')}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="text-center mb-12">
-            <h1 className="text-3xl font-bold text-foreground mb-4">How would you like to start?</h1>
+            <h1 className="text-3xl font-bold text-foreground mb-4">
+              {savedResumes.length > 0 ? 'Create a New Resume' : 'How would you like to start?'}
+            </h1>
             <p className="text-muted-foreground">Choose an option to begin creating your resume</p>
           </div>
 

@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useRef, useState, useEffect } from 'react';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useResume } from '@/hooks/useResume';
 import { useAuth } from '@/contexts/AuthContext';
 import { PersonalInfoForm } from '@/components/resume/PersonalInfoForm';
@@ -15,18 +15,27 @@ import { ClassicTemplate } from '@/components/resume/templates/ClassicTemplate';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FileText, Sparkles, LogIn, LogOut, User, ArrowLeft, Layout, Minimize2, Palette } from 'lucide-react';
+import { FileText, Sparkles, LogIn, LogOut, User, ArrowLeft, Layout, Minimize2, Palette, Save, Loader2 } from 'lucide-react';
 import { TemplateType } from './CreateResume';
+import { saveResume, loadResume } from '@/services/resumeService';
+import { toast } from 'sonner';
 
 const ResumeBuilder = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const initialTemplate = (searchParams.get('template') as TemplateType) || 'modern';
+  const resumeIdParam = searchParams.get('resumeId');
+  
   const [template, setTemplate] = useState<TemplateType>(initialTemplate);
+  const [currentResumeId, setCurrentResumeId] = useState<string | null>(resumeIdParam);
+  const [saving, setSaving] = useState(false);
+  const [loadingResume, setLoadingResume] = useState(false);
   
   const previewRef = useRef<HTMLDivElement>(null);
   const { user, signOut } = useAuth();
   const {
     resume,
+    setResume,
     updatePersonalInfo,
     updateSummary,
     addExperience,
@@ -38,6 +47,52 @@ const ResumeBuilder = () => {
     addSkill,
     removeSkill,
   } = useResume();
+
+  // Load existing resume if resumeId is provided
+  useEffect(() => {
+    if (resumeIdParam && user) {
+      loadExistingResume(resumeIdParam);
+    }
+  }, [resumeIdParam, user]);
+
+  const loadExistingResume = async (resumeId: string) => {
+    if (!user) return;
+    setLoadingResume(true);
+    try {
+      const data = await loadResume(resumeId, user.id);
+      if (data) {
+        setResume(data);
+        setCurrentResumeId(resumeId);
+      } else {
+        toast.error('Resume not found');
+        navigate('/create');
+      }
+    } catch (error) {
+      console.error('Error loading resume:', error);
+      toast.error('Failed to load resume');
+    } finally {
+      setLoadingResume(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!user) {
+      toast.error('Please sign in to save your resume');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const savedId = await saveResume(user.id, resume, currentResumeId || undefined);
+      setCurrentResumeId(savedId);
+      toast.success('Resume saved successfully!');
+    } catch (error) {
+      console.error('Error saving resume:', error);
+      toast.error('Failed to save resume');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const renderTemplate = () => {
     switch (template) {
@@ -52,11 +107,16 @@ const ResumeBuilder = () => {
     }
   };
 
-  const templateIcons = {
-    minimal: Minimize2,
-    modern: Layout,
-    classic: Palette,
-  };
+  if (loadingResume) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
+          <p className="text-muted-foreground">Loading your resume...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -84,6 +144,24 @@ const ResumeBuilder = () => {
               <Sparkles className="h-4 w-4 text-accent" />
               <span className="hidden sm:inline">Powered by AI</span>
             </div>
+            
+            {/* Save Button */}
+            {user && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleSave}
+                disabled={saving}
+              >
+                {saving ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Save className="h-4 w-4 mr-2" />
+                )}
+                {saving ? 'Saving...' : 'Save'}
+              </Button>
+            )}
+            
             {user ? (
               <div className="flex items-center gap-3">
                 <span className="text-sm text-muted-foreground hidden sm:flex items-center gap-1">
