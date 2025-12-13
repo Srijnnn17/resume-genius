@@ -119,9 +119,9 @@ const ResumeBuilder = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-md">
+      <header className="sticky top-0 z-50 header-glass">
         <div className="container flex items-center justify-between h-14 px-4">
           <div className="flex items-center gap-2">
             <Button asChild variant="ghost" size="icon" className="h-8 w-8">
@@ -130,7 +130,7 @@ const ResumeBuilder = () => {
               </Link>
             </Button>
             <div className="flex items-center gap-2.5">
-              <div className="p-1.5 rounded-md bg-primary">
+              <div className="p-1.5 rounded-lg bg-gradient-to-br from-primary to-primary/80 shadow-sm">
                 <FileText className="h-4 w-4 text-primary-foreground" />
               </div>
               <span className="font-semibold text-foreground">ResumeAI</span>
