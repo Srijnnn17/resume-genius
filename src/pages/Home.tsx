@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FileText, Sparkles, Zap, Target, LogIn, LogOut, User, ArrowRight, CheckCircle } from 'lucide-react';
 
 export default function Home() {
@@ -14,12 +13,12 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-md">
+      <header className="sticky top-0 z-50 header-glass">
         <div className="container flex items-center justify-between h-14 px-4">
           <div className="flex items-center gap-2.5">
-            <div className="p-1.5 rounded-md bg-primary">
+            <div className="p-1.5 rounded-lg bg-gradient-to-br from-primary to-primary/80 shadow-sm">
               <FileText className="h-4 w-4 text-primary-foreground" />
             </div>
             <span className="font-semibold text-foreground">ResumeAI</span>
@@ -49,36 +48,36 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-16 lg:py-24">
+      <section className="relative overflow-hidden py-20 lg:py-28">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 -left-24 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 -right-24 w-72 h-72 bg-accent/5 rounded-full blur-3xl" />
+          <div className="absolute top-1/3 -left-32 w-80 h-80 bg-primary/8 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/3 -right-32 w-80 h-80 bg-accent/8 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
         
         <div className="container relative px-4">
           <div className="max-w-2xl mx-auto text-center animate-fade-up">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-primary text-sm font-medium mb-8 shadow-sm">
               <Sparkles className="h-3.5 w-3.5" />
               AI-Powered Resume Building
             </div>
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-5 leading-tight tracking-tight">
+            <h1 className="text-foreground mb-6">
               Build Your Perfect Resume
               <br />
-              <span className="text-primary">with AI Assistance</span>
+              <span className="text-gradient">with AI Assistance</span>
             </h1>
-            <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">
               Create professional resumes that stand out. Our AI helps you write compelling content
               and optimize for ATS systems.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button asChild size="lg" className="btn-primary-enhanced text-base px-6">
+              <Button asChild size="lg" className="btn-primary-enhanced text-base px-8">
                 <Link to="/create">
                   Get Started
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               {!user && (
-                <Button asChild variant="outline" size="lg" className="text-base px-6">
+                <Button asChild variant="outline" size="lg" className="text-base px-8 hover-lift">
                   <Link to="/auth">Sign In</Link>
                 </Button>
               )}
@@ -88,37 +87,33 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-20">
         <div className="container px-4">
-          <h2 className="text-2xl font-bold text-center mb-10">Why Choose ResumeAI?</h2>
-          <div className="grid md:grid-cols-3 gap-5 max-w-4xl mx-auto">
+          <h2 className="text-center mb-12 animate-fade-up">Why Choose ResumeAI?</h2>
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {features.map((feature, index) => (
-              <Card 
+              <div 
                 key={index} 
-                className="card-base hover-lift animate-fade-up"
+                className="feature-card card-interactive animate-fade-up"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <CardHeader className="pb-3">
-                  <div className="p-2.5 rounded-lg bg-primary/10 w-fit mb-3">
-                    <feature.icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <CardTitle className="text-lg">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-sm leading-relaxed">{feature.description}</CardDescription>
-                </CardContent>
-              </Card>
+                <div className="p-3 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 w-fit mb-4">
+                  <feature.icon className="h-5 w-5 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Benefits Section */}
-      <section className="py-16">
+      <section className="py-20">
         <div className="container px-4">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-10">Everything You Need</h2>
-            <div className="grid sm:grid-cols-2 gap-3">
+            <h2 className="text-center mb-12 animate-fade-up">Everything You Need</h2>
+            <div className="grid sm:grid-cols-2 gap-4">
               {[
                 'AI-powered bullet point enhancement',
                 'Real-time resume preview',
@@ -129,11 +124,13 @@ export default function Home() {
               ].map((benefit, index) => (
                 <div 
                   key={index} 
-                  className="flex items-center gap-3 p-3.5 rounded-lg bg-card border border-border hover-lift animate-fade-up"
-                  style={{ animationDelay: `${index * 50}ms` }}
+                  className="flex items-center gap-3 p-4 rounded-xl card-base hover-lift animate-fade-up"
+                  style={{ animationDelay: `${index * 75}ms` }}
                 >
-                  <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
-                  <span className="text-sm text-foreground">{benefit}</span>
+                  <div className="p-1 rounded-full bg-primary/10">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                  </div>
+                  <span className="text-sm text-foreground font-medium">{benefit}</span>
                 </div>
               ))}
             </div>
@@ -142,23 +139,25 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-primary/[0.03] border-y border-border">
-        <div className="container px-4 text-center">
-          <h2 className="text-2xl font-bold mb-3">Ready to Build Your Resume?</h2>
-          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-            Start creating your professional resume today with AI assistance.
-          </p>
-          <Button asChild size="lg" className="btn-primary-enhanced px-6">
-            <Link to="/create">
-              Create Your Resume
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+      <section className="py-20">
+        <div className="container px-4">
+          <div className="max-w-2xl mx-auto text-center p-10 rounded-2xl card-base animate-fade-up">
+            <h2 className="mb-3">Ready to Build Your Resume?</h2>
+            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+              Start creating your professional resume today with AI assistance.
+            </p>
+            <Button asChild size="lg" className="btn-primary-enhanced px-8">
+              <Link to="/create">
+                Create Your Resume
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-6">
+      <footer className="py-8">
         <div className="container px-4 text-center text-xs text-muted-foreground">
           © {new Date().getFullYear()} ResumeAI. Built with AI-powered technology.
         </div>
