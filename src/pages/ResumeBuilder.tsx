@@ -15,7 +15,7 @@ import { ClassicTemplate } from '@/components/resume/templates/ClassicTemplate';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FileText, LogIn, LogOut, User, ArrowLeft, Layout, Minimize2, Palette, Save, Loader2 } from 'lucide-react';
+import { FileText, Sparkles, LogIn, LogOut, User, ArrowLeft, Layout, Minimize2, Palette, Save, Loader2 } from 'lucide-react';
 import { TemplateType } from './CreateResume';
 import { saveResume, loadResume } from '@/services/resumeService';
 import { toast } from 'sonner';
@@ -111,32 +111,40 @@ const ResumeBuilder = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-6 w-6 animate-spin mx-auto mb-3 text-primary" />
-          <p className="text-sm text-muted-foreground">Loading your resume...</p>
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
+          <p className="text-muted-foreground">Loading your resume...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 header-glass">
-        <div className="container flex items-center justify-between h-14 px-4">
-          <div className="flex items-center gap-2">
-            <Button asChild variant="ghost" size="icon" className="h-8 w-8">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
+        <div className="container flex items-center justify-between h-16 px-4">
+          <div className="flex items-center gap-3">
+            <Button asChild variant="ghost" size="icon">
               <Link to="/create">
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowLeft className="h-5 w-5" />
               </Link>
             </Button>
-            <div className="flex items-center gap-2.5">
-              <div className="p-1.5 rounded-lg bg-gradient-to-br from-primary to-primary/80 shadow-sm">
-                <FileText className="h-4 w-4 text-primary-foreground" />
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary">
+                <FileText className="h-5 w-5 text-primary-foreground" />
               </div>
-              <span className="font-semibold text-foreground">ResumeAI</span>
+              <div>
+                <h1 className="text-lg font-bold text-foreground">ResumeAI</h1>
+                <p className="text-xs text-muted-foreground">AI-Powered Resume Builder</p>
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Sparkles className="h-4 w-4 text-accent" />
+              <span className="hidden sm:inline">Powered by AI</span>
+            </div>
+            
             {/* Save Button */}
             {user && (
               <Button 
@@ -144,32 +152,31 @@ const ResumeBuilder = () => {
                 size="sm" 
                 onClick={handleSave}
                 disabled={saving}
-                className="h-8"
               >
                 {saving ? (
-                  <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 ) : (
-                  <Save className="h-3.5 w-3.5 mr-1.5" />
+                  <Save className="h-4 w-4 mr-2" />
                 )}
                 {saving ? 'Saving...' : 'Save'}
               </Button>
             )}
             
             {user ? (
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground hidden sm:flex items-center gap-1.5">
-                  <User className="h-3.5 w-3.5" />
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-muted-foreground hidden sm:flex items-center gap-1">
+                  <User className="h-4 w-4" />
                   {user.email}
                 </span>
-                <Button variant="ghost" size="sm" onClick={signOut} className="h-8 text-muted-foreground hover:text-foreground">
-                  <LogOut className="h-3.5 w-3.5 mr-1.5" />
+                <Button variant="outline" size="sm" onClick={signOut}>
+                  <LogOut className="h-4 w-4 mr-2" />
                   Sign Out
                 </Button>
               </div>
             ) : (
-              <Button asChild variant="ghost" size="sm" className="h-8">
+              <Button asChild variant="outline" size="sm">
                 <Link to="/auth">
-                  <LogIn className="h-3.5 w-3.5 mr-1.5" />
+                  <LogIn className="h-4 w-4 mr-2" />
                   Sign In
                 </Link>
               </Button>
@@ -181,10 +188,10 @@ const ResumeBuilder = () => {
       {/* Main Content */}
       <main className="container px-4 py-6">
         <div className="grid lg:grid-cols-2 gap-6">
-          {/* Form Section - Clean and light */}
-          <div className="space-y-5">
-            <ScrollArea className="h-[calc(100vh-140px)]">
-              <div className="space-y-5 pr-4">
+          {/* Form Section */}
+          <div className="space-y-6">
+            <ScrollArea className="h-[calc(100vh-180px)]">
+              <div className="space-y-6 pr-4">
                 <PersonalInfoForm
                   data={resume.personalInfo}
                   onChange={updatePersonalInfo}
@@ -217,39 +224,40 @@ const ResumeBuilder = () => {
             </ScrollArea>
           </div>
 
-          {/* Preview Section - Clean and print-friendly */}
-          <div className="lg:sticky lg:top-20 h-fit">
-            <div className="rounded-lg overflow-hidden border border-border bg-card">
-              {/* Preview Header */}
-              <div className="p-3 border-b border-border bg-muted/30 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex gap-1">
-                    <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+          {/* Preview Section */}
+          <div className="lg:sticky lg:top-24 h-fit">
+            <div className="rounded-xl overflow-hidden shadow-xl border border-border bg-card">
+              <div className="p-3 border-b border-border bg-muted/50 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1.5">
+                      <div className="w-3 h-3 rounded-full bg-red-500" />
+                      <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                      <div className="w-3 h-3 rounded-full bg-green-500" />
+                    </div>
+                    <span className="text-xs text-muted-foreground ml-2">Live Preview</span>
                   </div>
-                  <span className="text-xs text-muted-foreground font-medium">Preview</span>
                   
                   {/* Template Selector */}
                   <Select value={template} onValueChange={(v) => setTemplate(v as TemplateType)}>
-                    <SelectTrigger className="w-28 h-7 text-xs border-border/50">
+                    <SelectTrigger className="w-32 h-8 text-xs">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="minimal">
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-2">
                           <Minimize2 className="h-3 w-3" />
                           Minimal
                         </div>
                       </SelectItem>
                       <SelectItem value="modern">
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-2">
                           <Layout className="h-3 w-3" />
                           Modern
                         </div>
                       </SelectItem>
                       <SelectItem value="classic">
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-2">
                           <Palette className="h-3 w-3" />
                           Classic
                         </div>
@@ -259,9 +267,7 @@ const ResumeBuilder = () => {
                 </div>
                 <DownloadButton data={resume} previewRef={previewRef} />
               </div>
-              
-              {/* Resume Preview - Light background for print-friendliness */}
-              <div className="p-4 bg-neutral-100 max-h-[calc(100vh-180px)] overflow-y-auto">
+              <div className="p-4 bg-slate-100 max-h-[calc(100vh-200px)] overflow-y-auto">
                 <div ref={previewRef}>
                   {renderTemplate()}
                 </div>
