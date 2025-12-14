@@ -1,18 +1,21 @@
 import { ResumeData } from '@/types/resume';
 import { Mail, Phone, MapPin, Linkedin, Globe } from 'lucide-react';
+import { AccentColor, accentColorMap } from '../AccentColorPicker';
 
 interface TemplateProps {
   data: ResumeData;
+  accentColor?: AccentColor;
 }
 
-export function MinimalTemplate({ data }: TemplateProps) {
+export function MinimalTemplate({ data, accentColor = 'green' }: TemplateProps) {
   const { personalInfo, summary, experiences, education, skills } = data;
+  const accent = accentColorMap[accentColor];
 
   return (
     <div className="resume-paper p-8 font-sans text-sm leading-relaxed bg-white" style={{ fontFamily: 'system-ui, sans-serif' }}>
       {/* Header */}
       <header className="mb-6">
-        <h1 className="text-3xl font-light text-slate-900 tracking-tight">
+        <h1 className="text-3xl font-light tracking-tight" style={{ color: accent }}>
           {personalInfo.fullName || 'Your Name'}
         </h1>
         <div className="flex flex-wrap gap-4 mt-3 text-xs text-slate-500">
@@ -59,7 +62,10 @@ export function MinimalTemplate({ data }: TemplateProps) {
       {/* Experience */}
       {experiences.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+          <h2 
+            className="text-xs font-semibold uppercase tracking-wider mb-3"
+            style={{ color: accent }}
+          >
             Experience
           </h2>
           <div className="space-y-4">
@@ -87,7 +93,10 @@ export function MinimalTemplate({ data }: TemplateProps) {
       {/* Education */}
       {education.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+          <h2 
+            className="text-xs font-semibold uppercase tracking-wider mb-3"
+            style={{ color: accent }}
+          >
             Education
           </h2>
           <div className="space-y-3">
@@ -114,7 +123,10 @@ export function MinimalTemplate({ data }: TemplateProps) {
       {/* Skills */}
       {skills.length > 0 && (
         <section>
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+          <h2 
+            className="text-xs font-semibold uppercase tracking-wider mb-3"
+            style={{ color: accent }}
+          >
             Skills
           </h2>
           <div className="flex flex-wrap gap-2">
