@@ -1,18 +1,21 @@
 import { ResumeData } from '@/types/resume';
 import { Mail, Phone, MapPin, Linkedin, Globe } from 'lucide-react';
+import { AccentColor, accentColorMap } from '../AccentColorPicker';
 
 interface TemplateProps {
   data: ResumeData;
+  accentColor?: AccentColor;
 }
 
-export function ClassicTemplate({ data }: TemplateProps) {
+export function ClassicTemplate({ data, accentColor = 'green' }: TemplateProps) {
   const { personalInfo, summary, experiences, education, skills } = data;
+  const accent = accentColorMap[accentColor];
 
   return (
     <div className="resume-paper p-8 font-serif text-sm leading-relaxed bg-white" style={{ fontFamily: 'Georgia, Times, serif' }}>
       {/* Header */}
-      <header className="text-center border-b-2 border-slate-800 pb-4 mb-4">
-        <h1 className="text-2xl font-bold text-slate-900 tracking-wide uppercase">
+      <header className="text-center border-b-2 pb-4 mb-4" style={{ borderColor: accent }}>
+        <h1 className="text-2xl font-bold tracking-wide uppercase" style={{ color: accent }}>
           {personalInfo.fullName || 'Your Name'}
         </h1>
         <div className="flex flex-wrap justify-center gap-3 mt-2 text-xs text-slate-600">
@@ -54,7 +57,10 @@ export function ClassicTemplate({ data }: TemplateProps) {
       {/* Summary */}
       {summary && (
         <section className="mb-4">
-          <h2 className="text-xs font-bold uppercase tracking-widest text-slate-800 border-b border-slate-300 pb-1 mb-2">
+          <h2 
+            className="text-xs font-bold uppercase tracking-widest border-b pb-1 mb-2"
+            style={{ color: accent, borderColor: `${accent}40` }}
+          >
             Professional Summary
           </h2>
           <p className="text-slate-700 text-xs leading-relaxed italic">{summary}</p>
@@ -64,7 +70,10 @@ export function ClassicTemplate({ data }: TemplateProps) {
       {/* Experience */}
       {experiences.length > 0 && (
         <section className="mb-4">
-          <h2 className="text-xs font-bold uppercase tracking-widest text-slate-800 border-b border-slate-300 pb-1 mb-2">
+          <h2 
+            className="text-xs font-bold uppercase tracking-widest border-b pb-1 mb-2"
+            style={{ color: accent, borderColor: `${accent}40` }}
+          >
             Professional Experience
           </h2>
           <div className="space-y-3">
@@ -96,7 +105,10 @@ export function ClassicTemplate({ data }: TemplateProps) {
       {/* Education */}
       {education.length > 0 && (
         <section className="mb-4">
-          <h2 className="text-xs font-bold uppercase tracking-widest text-slate-800 border-b border-slate-300 pb-1 mb-2">
+          <h2 
+            className="text-xs font-bold uppercase tracking-widest border-b pb-1 mb-2"
+            style={{ color: accent, borderColor: `${accent}40` }}
+          >
             Education
           </h2>
           <div className="space-y-2">
@@ -123,7 +135,10 @@ export function ClassicTemplate({ data }: TemplateProps) {
       {/* Skills */}
       {skills.length > 0 && (
         <section>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-slate-800 border-b border-slate-300 pb-1 mb-2">
+          <h2 
+            className="text-xs font-bold uppercase tracking-widest border-b pb-1 mb-2"
+            style={{ color: accent, borderColor: `${accent}40` }}
+          >
             Skills & Expertise
           </h2>
           <p className="text-slate-700 text-xs">{skills.join(' • ')}</p>

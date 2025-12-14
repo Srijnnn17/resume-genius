@@ -12,9 +12,11 @@ import { DownloadButton } from '@/components/resume/DownloadButton';
 import { MinimalTemplate } from '@/components/resume/templates/MinimalTemplate';
 import { ModernTemplate } from '@/components/resume/templates/ModernTemplate';
 import { ClassicTemplate } from '@/components/resume/templates/ClassicTemplate';
+import { AccentColorPicker, AccentColor } from '@/components/resume/AccentColorPicker';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { FileText, Sparkles, LogIn, LogOut, User, ArrowLeft, Layout, Minimize2, Palette, Save, Loader2 } from 'lucide-react';
 import { TemplateType } from './CreateResume';
 import { saveResume, loadResume } from '@/services/resumeService';
@@ -27,6 +29,7 @@ const ResumeBuilder = () => {
   const resumeIdParam = searchParams.get('resumeId');
   
   const [template, setTemplate] = useState<TemplateType>(initialTemplate);
+  const [accentColor, setAccentColor] = useState<AccentColor>('green');
   const [currentResumeId, setCurrentResumeId] = useState<string | null>(resumeIdParam);
   const [saving, setSaving] = useState(false);
   const [loadingResume, setLoadingResume] = useState(false);
@@ -97,13 +100,13 @@ const ResumeBuilder = () => {
   const renderTemplate = () => {
     switch (template) {
       case 'minimal':
-        return <MinimalTemplate data={resume} />;
+        return <MinimalTemplate data={resume} accentColor={accentColor} />;
       case 'modern':
-        return <ModernTemplate data={resume} />;
+        return <ModernTemplate data={resume} accentColor={accentColor} />;
       case 'classic':
-        return <ClassicTemplate data={resume} />;
+        return <ClassicTemplate data={resume} accentColor={accentColor} />;
       default:
-        return <ModernTemplate data={resume} />;
+        return <ModernTemplate data={resume} accentColor={accentColor} />;
     }
   };
 
@@ -228,19 +231,19 @@ const ResumeBuilder = () => {
           <div className="lg:sticky lg:top-24 h-fit">
             <div className="rounded-xl overflow-hidden shadow-xl border border-border bg-card">
               <div className="p-3 border-b border-border bg-muted/50 flex items-center justify-between">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                   <div className="flex items-center gap-2">
                     <div className="flex gap-1.5">
                       <div className="w-3 h-3 rounded-full bg-red-500" />
                       <div className="w-3 h-3 rounded-full bg-yellow-500" />
                       <div className="w-3 h-3 rounded-full bg-green-500" />
                     </div>
-                    <span className="text-xs text-muted-foreground ml-2">Live Preview</span>
                   </div>
                   
                   {/* Template Selector */}
                   <Select value={template} onValueChange={(v) => setTemplate(v as TemplateType)}>
-                    <SelectTrigger className="w-32 h-8 text-xs">
+                    <SelectTrigger className="w-28 h-8 text-xs">
+                      <Layout className="h-3 w-3 mr-1" />
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -258,12 +261,38 @@ const ResumeBuilder = () => {
                       </SelectItem>
                       <SelectItem value="classic">
                         <div className="flex items-center gap-2">
-                          <Palette className="h-3 w-3" />
+                          <FileText className="h-3 w-3" />
                           Classic
                         </div>
                       </SelectItem>
                     </SelectContent>
                   </Select>
+
+                  {/* Accent Color Picker */}
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-8 text-xs gap-2">
+                        <Palette className="h-3 w-3" />
+                        Accent
+                        <div 
+                          className="w-4 h-4 rounded-full border border-border"
+                          style={{ backgroundColor: accentColor === 'green' ? '#22C55E' : 
+                            accentColor === 'blue' ? '#3B82F6' :
+                            accentColor === 'indigo' ? '#6366F1' :
+                            accentColor === 'purple' ? '#A855F7' :
+                            accentColor === 'red' ? '#EF4444' :
+                            accentColor === 'orange' ? '#F97316' :
+                            accentColor === 'teal' ? '#14B8A6' :
+                            accentColor === 'pink' ? '#EC4899' :
+                            accentColor === 'gray' ? '#6B7280' : '#1F2937'
+                          }}
+                        />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-56 p-2" align="start">
+                      <AccentColorPicker selected={accentColor} onChange={setAccentColor} />
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <DownloadButton data={resume} previewRef={previewRef} />
               </div>
