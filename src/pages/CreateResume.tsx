@@ -136,17 +136,17 @@ export default function CreateResume() {
                 <p className="text-muted-foreground">Continue editing your saved resumes</p>
               </div>
               
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {savedResumes.map((resume) => (
                   <Card
                     key={resume.id}
-                    className="cursor-pointer hover:shadow-lg transition-all border-border/50 hover:border-primary/50 group"
+                    className="cursor-pointer transition-all duration-300 border-border/50 hover:border-primary/50 group hover:-translate-y-1 hover:shadow-xl"
                     onClick={() => handleEditResume(resume.id)}
                   >
-                    <CardContent className="p-5">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="p-2 rounded-lg bg-primary/10">
-                          <FileText className="h-5 w-5 text-primary" />
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="p-3 rounded-xl bg-primary/10 transition-colors group-hover:bg-primary/20">
+                          <FileText className="h-6 w-6 text-primary" />
                         </div>
                         <Button
                           variant="ghost"
@@ -157,14 +157,14 @@ export default function CreateResume() {
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
-                      <h3 className="font-semibold text-foreground mb-1 truncate">
+                      <h3 className="font-semibold text-foreground mb-1 truncate text-lg">
                         {resume.personal_info?.fullName || 'Untitled Resume'}
                       </h3>
-                      <p className="text-sm text-muted-foreground truncate mb-3">
+                      <p className="text-sm text-muted-foreground truncate mb-4">
                         {resume.personal_info?.email || 'No email'}
                       </p>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Clock className="h-3 w-3" />
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground pt-3 border-t border-border/50">
+                        <Clock className="h-3.5 w-3.5" />
                         <span>Updated {format(new Date(resume.updated_at), 'MMM d, yyyy')}</span>
                       </div>
                     </CardContent>
@@ -182,24 +182,24 @@ export default function CreateResume() {
           </div>
 
           {/* Options */}
-          <div className="grid md:grid-cols-2 gap-6 mb-12">
-            <Card className="border-2 border-primary cursor-pointer hover:shadow-lg transition-all">
-              <CardHeader className="text-center">
-                <div className="p-4 rounded-full bg-primary/10 w-fit mx-auto mb-4">
-                  <Plus className="h-8 w-8 text-primary" />
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <Card className="border-2 border-primary cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+              <CardHeader className="text-center py-8">
+                <div className="p-5 rounded-2xl bg-primary/10 w-fit mx-auto mb-5 transition-transform duration-300 group-hover:scale-110">
+                  <Plus className="h-10 w-10 text-primary" />
                 </div>
-                <CardTitle className="text-xl">Create New Resume</CardTitle>
-                <CardDescription>Start from scratch with a template</CardDescription>
+                <CardTitle className="text-2xl font-bold">Create New Resume</CardTitle>
+                <CardDescription className="text-base mt-2">Start from scratch with a template</CardDescription>
               </CardHeader>
             </Card>
 
-            <Card className="border-border/50 cursor-pointer hover:shadow-lg transition-all opacity-60">
-              <CardHeader className="text-center">
-                <div className="p-4 rounded-full bg-muted w-fit mx-auto mb-4">
-                  <Upload className="h-8 w-8 text-muted-foreground" />
+            <Card className="border-border/50 cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl opacity-60">
+              <CardHeader className="text-center py-8">
+                <div className="p-5 rounded-2xl bg-muted w-fit mx-auto mb-5">
+                  <Upload className="h-10 w-10 text-muted-foreground" />
                 </div>
-                <CardTitle className="text-xl">Upload Existing</CardTitle>
-                <CardDescription>Coming soon - Upload PDF or DOCX</CardDescription>
+                <CardTitle className="text-2xl font-bold">Upload Existing</CardTitle>
+                <CardDescription className="text-base mt-2">Coming soon - Upload PDF or DOCX</CardDescription>
               </CardHeader>
             </Card>
           </div>
@@ -211,30 +211,30 @@ export default function CreateResume() {
               <p className="text-muted-foreground">Select a template style for your resume</p>
             </div>
 
-            <div className="grid sm:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-3 gap-6">
               {templates.map((template) => (
                 <Card
                   key={template.id}
-                  className={`cursor-pointer transition-all hover:shadow-lg ${
+                  className={`cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
                     selectedTemplate === template.id
                       ? 'border-2 border-primary ring-2 ring-primary/20'
-                      : 'border-border/50'
+                      : 'border-border/50 hover:border-primary/30'
                   }`}
                   onClick={() => setSelectedTemplate(template.id)}
                 >
-                  <CardContent className="p-6 text-center">
+                  <CardContent className="p-8 text-center">
                     <div
-                      className={`p-3 rounded-xl w-fit mx-auto mb-4 ${
-                        selectedTemplate === template.id ? 'bg-primary/10' : 'bg-muted'
+                      className={`p-4 rounded-2xl w-fit mx-auto mb-5 transition-all duration-300 ${
+                        selectedTemplate === template.id ? 'bg-primary/10 scale-110' : 'bg-muted'
                       }`}
                     >
                       <template.icon
-                        className={`h-6 w-6 ${
+                        className={`h-7 w-7 ${
                           selectedTemplate === template.id ? 'text-primary' : 'text-muted-foreground'
                         }`}
                       />
                     </div>
-                    <h3 className="font-semibold text-foreground mb-1">{template.name}</h3>
+                    <h3 className="font-bold text-foreground mb-2 text-lg">{template.name}</h3>
                     <p className="text-sm text-muted-foreground">{template.description}</p>
                   </CardContent>
                 </Card>
