@@ -18,7 +18,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { FileText, Sparkles, LogIn, LogOut, User, ArrowLeft, Layout, Minimize2, Palette, Save, Loader2 } from 'lucide-react';
+import { FileText, Sparkles, LogIn, LogOut, ArrowLeft, Layout, Minimize2, Palette, Save, Loader2 } from 'lucide-react';
 import { TemplateType } from './CreateResume';
 import { saveResume, loadResume } from '@/services/resumeService';
 import { toast } from 'sonner';
@@ -54,6 +54,13 @@ const ResumeBuilder = () => {
     addSkill,
     removeSkill,
   } = useResume();
+
+  // Extract first name from email (before @)
+  const getUserName = () => {
+    if (!user?.email) return '';
+    const namePart = user.email.split('@')[0];
+    return namePart.charAt(0).toUpperCase() + namePart.slice(1);
+  };
 
   // Load existing resume if resumeId is provided
   useEffect(() => {
@@ -126,27 +133,29 @@ const ResumeBuilder = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
+    <div className="min-h-screen bg-background font-['Inter']">
+      {/* Header - styled consistently with Home */}
+      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur-md">
         <div className="container flex items-center justify-between h-16 px-4">
-          <div className="flex items-center gap-3">
+          {/* Left Side */}
+          <div className="flex items-center gap-2.5">
             <Button asChild variant="ghost" size="icon">
               <Link to="/create">
                 <ArrowLeft className="h-5 w-5" />
               </Link>
             </Button>
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary">
+            <Link to="/" className="flex items-center gap-2.5 group">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-md group-hover:shadow-lg transition-shadow">
                 <FileText className="h-5 w-5 text-primary-foreground" />
               </div>
-              <div>
-                <h1 className="text-lg font-bold text-foreground">ResumeAI</h1>
-                <p className="text-xs text-muted-foreground">AI-Powered Resume Builder</p>
-              </div>
-            </div>
+              <span className="text-xl font-semibold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                ResumeAI
+              </span>
+            </Link>
           </div>
-          <div className="flex items-center gap-4">
+
+          {/* Right Side */}
+          <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Sparkles className="h-4 w-4 text-accent" />
               <span className="hidden sm:inline">Powered by AI</span>
@@ -159,6 +168,7 @@ const ResumeBuilder = () => {
                 size="sm" 
                 onClick={handleSave}
                 disabled={saving}
+                className="rounded-full px-5 border-border/60 hover:bg-muted/50"
               >
                 {saving ? (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -170,18 +180,27 @@ const ResumeBuilder = () => {
             )}
             
             {user ? (
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-muted-foreground hidden sm:flex items-center gap-1">
-                  <User className="h-4 w-4" />
-                  {user.email}
+              <>
+                <span className="text-sm text-muted-foreground hidden sm:block">
+                  Hi {getUserName()}
                 </span>
-                <Button variant="outline" size="sm" onClick={signOut}>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={signOut}
+                  className="rounded-full px-5 border-border/60 hover:bg-muted/50"
+                >
                   <LogOut className="h-4 w-4 mr-2" />
                   Sign Out
                 </Button>
-              </div>
+              </>
             ) : (
-              <Button asChild variant="outline" size="sm">
+              <Button 
+                asChild 
+                variant="outline" 
+                size="sm"
+                className="rounded-full px-5 border-border/60 hover:bg-muted/50"
+              >
                 <Link to="/auth">
                   <LogIn className="h-4 w-4 mr-2" />
                   Sign In
