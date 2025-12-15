@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { ResumeData, PersonalInfo, Experience, Education } from '@/types/resume';
+import { ResumeData, PersonalInfo, Experience, Education, Project } from '@/types/resume';
 import { Json } from '@/integrations/supabase/types';
 
 export interface SavedResume {
@@ -8,6 +8,7 @@ export interface SavedResume {
   summary: string;
   skills: string[];
   experiences: Experience[];
+  projects: Project[];
   education: Education[];
   created_at: string;
   updated_at: string;
@@ -48,11 +49,12 @@ export async function fetchUserResumes(userId: string): Promise<SavedResume[]> {
   if (error) throw error;
   if (!resumes) return [];
 
-  // Fetch experiences and education for each resume
+  // Fetch experiences, projects, and education for each resume
   const resumesWithDetails = await Promise.all(
     resumes.map(async (resume) => {
-      const [expResult, eduResult] = await Promise.all([
+      const [expResult, projResult, eduResult] = await Promise.all([
         supabase.from('experiences').select('*').eq('resume_id', resume.id),
+        supabase.from('projects').select('*').eq('resume_id', resume.id),
         supabase.from('education').select('*').eq('resume_id', resume.id),
       ]);
 
@@ -70,6 +72,13 @@ export async function fetchUserResumes(userId: string): Promise<SavedResume[]> {
           endDate: exp.end_date || '',
           isCurrent: exp.is_current || false,
           description: exp.description || '',
+        })),
+        projects: (projResult.data || []).map((proj) => ({
+          id: proj.id,
+          name: proj.name,
+          techStack: proj.tech_stack || '',
+          description: proj.description || '',
+          date: proj.date || '',
         })),
         education: (eduResult.data || []).map((edu) => ({
           id: edu.id,
@@ -121,8 +130,9 @@ export async function saveResume(
 
     if (updateError) throw updateError;
 
-    // Delete existing experiences and education, then re-insert
+    // Delete existing experiences, projects, and education, then re-insert
     await supabase.from('experiences').delete().eq('resume_id', resumeId);
+    await supabase.from('projects').delete().eq('resume_id', resumeId);
     await supabase.from('education').delete().eq('resume_id', resumeId);
 
     // Insert experiences
@@ -140,6 +150,20 @@ export async function saveResume(
         }))
       );
       if (expError) throw expError;
+    }
+
+    // Insert projects
+    if (resumeData.projects.length > 0) {
+      const { error: projError } = await supabase.from('projects').insert(
+        resumeData.projects.map((proj) => ({
+          resume_id: resumeId,
+          name: proj.name,
+          tech_stack: proj.techStack,
+          description: proj.description,
+          date: proj.date,
+        }))
+      );
+      if (projError) throw projError;
     }
 
     // Insert education
@@ -193,6 +217,20 @@ export async function saveResume(
       if (expError) throw expError;
     }
 
+    // Insert projects
+    if (resumeData.projects.length > 0) {
+      const { error: projError } = await supabase.from('projects').insert(
+        resumeData.projects.map((proj) => ({
+          resume_id: newResumeId,
+          name: proj.name,
+          tech_stack: proj.techStack,
+          description: proj.description,
+          date: proj.date,
+        }))
+      );
+      if (projError) throw projError;
+    }
+
     // Insert education
     if (resumeData.education.length > 0) {
       const { error: eduError } = await supabase.from('education').insert(
@@ -224,8 +262,9 @@ export async function loadResume(resumeId: string, userId: string): Promise<Resu
   if (error) throw error;
   if (!resume) return null;
 
-  const [expResult, eduResult] = await Promise.all([
+  const [expResult, projResult, eduResult] = await Promise.all([
     supabase.from('experiences').select('*').eq('resume_id', resumeId),
+    supabase.from('projects').select('*').eq('resume_id', resumeId),
     supabase.from('education').select('*').eq('resume_id', resumeId),
   ]);
 
@@ -243,6 +282,13 @@ export async function loadResume(resumeId: string, userId: string): Promise<Resu
       isCurrent: exp.is_current || false,
       description: exp.description || '',
     })),
+    projects: (projResult.data || []).map((proj) => ({
+      id: proj.id,
+      name: proj.name,
+      techStack: proj.tech_stack || '',
+      description: proj.description || '',
+      date: proj.date || '',
+    })),
     education: (eduResult.data || []).map((edu) => ({
       id: edu.id,
       institution: edu.institution,
@@ -256,8 +302,9 @@ export async function loadResume(resumeId: string, userId: string): Promise<Resu
 }
 
 export async function deleteResume(resumeId: string, userId: string): Promise<void> {
-  // Delete experiences and education first (cascade should handle this, but being safe)
+  // Delete experiences, projects, and education first (cascade should handle this, but being safe)
   await supabase.from('experiences').delete().eq('resume_id', resumeId);
+  await supabase.from('projects').delete().eq('resume_id', resumeId);
   await supabase.from('education').delete().eq('resume_id', resumeId);
   
   const { error } = await supabase

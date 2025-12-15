@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { PersonalInfoForm } from '@/components/resume/PersonalInfoForm';
 import { SummaryForm } from '@/components/resume/SummaryForm';
 import { ExperienceForm } from '@/components/resume/ExperienceForm';
+import { ProjectsForm } from '@/components/resume/ProjectsForm';
 import { EducationForm } from '@/components/resume/EducationForm';
 import { SkillsForm } from '@/components/resume/SkillsForm';
 import { ATSMatcher } from '@/components/resume/ATSMatcher';
@@ -44,6 +45,9 @@ const ResumeBuilder = () => {
     addExperience,
     updateExperience,
     removeExperience,
+    addProject,
+    updateProject,
+    removeProject,
     addEducation,
     updateEducation,
     removeEducation,
@@ -208,6 +212,12 @@ const ResumeBuilder = () => {
                   onAdd={addExperience}
                   onUpdate={updateExperience}
                   onRemove={removeExperience}
+                />
+                <ProjectsForm
+                  projects={resume.projects}
+                  onAdd={addProject}
+                  onUpdate={updateProject}
+                  onRemove={removeProject}
                 />
                 <EducationForm
                   education={resume.education}

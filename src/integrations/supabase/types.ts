@@ -105,6 +105,44 @@ export type Database = {
           },
         ]
       }
+      projects: {
+        Row: {
+          created_at: string
+          date: string | null
+          description: string | null
+          id: string
+          name: string
+          resume_id: string
+          tech_stack: string | null
+        }
+        Insert: {
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          resume_id: string
+          tech_stack?: string | null
+        }
+        Update: {
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          resume_id?: string
+          tech_stack?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_resume_id_fkey"
+            columns: ["resume_id"]
+            isOneToOne: false
+            referencedRelation: "resumes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       resumes: {
         Row: {
           created_at: string

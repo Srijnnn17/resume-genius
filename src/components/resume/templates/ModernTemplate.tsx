@@ -8,17 +8,17 @@ interface TemplateProps {
 }
 
 export function ModernTemplate({ data, accentColor = 'green' }: TemplateProps) {
-  const { personalInfo, summary, experiences, education, skills } = data;
+  const { personalInfo, summary, experiences, projects, education, skills } = data;
   const accent = accentColorMap[accentColor];
 
   return (
-    <div className="resume-paper font-sans text-sm leading-relaxed bg-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-      {/* Header with accent color */}
-      <header className="p-6 border-b-2" style={{ borderColor: accent }}>
-        <h1 className="text-2xl font-bold tracking-tight text-center" style={{ color: accent }}>
+    <div className="resume-paper text-sm leading-relaxed bg-white" style={{ fontFamily: 'Roboto, system-ui, sans-serif' }}>
+      {/* Header with colored background */}
+      <header className="p-6 text-white" style={{ backgroundColor: accent }}>
+        <h1 className="text-2xl font-bold tracking-tight text-center">
           {personalInfo.fullName || 'Your Name'}
         </h1>
-        <div className="flex flex-wrap justify-center gap-3 mt-3 text-xs text-slate-600">
+        <div className="flex flex-wrap justify-center gap-4 mt-3 text-xs text-white/90">
           {personalInfo.email && (
             <span className="flex items-center gap-1">
               <Mail className="h-3 w-3" />
@@ -31,14 +31,14 @@ export function ModernTemplate({ data, accentColor = 'green' }: TemplateProps) {
               {personalInfo.phone}
             </span>
           )}
+        </div>
+        <div className="flex flex-wrap justify-center gap-4 mt-1 text-xs text-white/90">
           {personalInfo.location && (
             <span className="flex items-center gap-1">
               <MapPin className="h-3 w-3" />
               {personalInfo.location}
             </span>
           )}
-        </div>
-        <div className="flex flex-wrap justify-center gap-3 mt-1 text-xs text-slate-600">
           {personalInfo.linkedin && (
             <span className="flex items-center gap-1">
               <Linkedin className="h-3 w-3" />
@@ -59,8 +59,8 @@ export function ModernTemplate({ data, accentColor = 'green' }: TemplateProps) {
         {summary && (
           <section className="mb-5">
             <h2 
-              className="text-xs font-bold uppercase tracking-wider pl-2 mb-2 border-l-4"
-              style={{ color: accent, borderColor: accent }}
+              className="text-sm font-bold mb-2"
+              style={{ color: accent }}
             >
               Professional Summary
             </h2>
@@ -72,27 +72,22 @@ export function ModernTemplate({ data, accentColor = 'green' }: TemplateProps) {
         {experiences.length > 0 && (
           <section className="mb-5">
             <h2 
-              className="text-xs font-bold uppercase tracking-wider pl-2 mb-3 border-l-4"
-              style={{ color: accent, borderColor: accent }}
+              className="text-sm font-bold mb-3"
+              style={{ color: accent }}
             >
-              Professional Experience
+              Experience
             </h2>
             <div className="space-y-4">
               {experiences.map((exp) => (
-                <div key={exp.id} className="relative pl-4 border-l-2 border-slate-200">
-                  <div 
-                    className="absolute -left-[5px] top-0 w-2 h-2 rounded-full"
-                    style={{ backgroundColor: accent }}
-                  />
+                <div key={exp.id} className="relative pl-3 border-l-2" style={{ borderColor: accent }}>
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="font-bold text-slate-900 text-xs">{exp.position || 'Position'}</h3>
-                      <p className="text-slate-500 text-xs">
+                      <p className="text-xs" style={{ color: accent }}>
                         {exp.company || 'Company'}
-                        {exp.location && ` · ${exp.location}`}
                       </p>
                     </div>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
                       - {exp.isCurrent ? 'Present' : exp.endDate || 'End'}
                     </span>
                   </div>
@@ -105,54 +100,86 @@ export function ModernTemplate({ data, accentColor = 'green' }: TemplateProps) {
           </section>
         )}
 
-        {/* Education */}
-        {education.length > 0 && (
+        {/* Projects */}
+        {projects.length > 0 && (
           <section className="mb-5">
             <h2 
-              className="text-xs font-bold uppercase tracking-wider pl-2 mb-3 border-l-4"
-              style={{ color: accent, borderColor: accent }}
+              className="text-sm font-bold mb-3"
+              style={{ color: accent }}
             >
-              Education
+              Projects
             </h2>
-            <div className="space-y-3">
-              {education.map((edu) => (
-                <div key={edu.id} className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-bold text-slate-900 text-xs">
-                      {edu.degree || 'Degree'} {edu.field && `in ${edu.field}`}
-                    </h3>
-                    <p className="text-slate-500 text-xs">
-                      {edu.institution || 'Institution'}
-                      {edu.gpa && ` · GPA: ${edu.gpa}`}
-                    </p>
+            <div className="space-y-4">
+              {projects.map((proj) => (
+                <div key={proj.id} className="relative pl-3 border-l-2" style={{ borderColor: accent }}>
+                  <div className="flex justify-between items-start">
+                    <h3 className="font-bold text-slate-900 text-xs">{proj.name || 'Project Name'}</h3>
+                    {proj.date && (
+                      <span className="text-xs text-slate-400">{proj.date}</span>
+                    )}
                   </div>
-                  <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
-                    {edu.startDate || 'Start'} – {edu.endDate || 'End'}
-                  </span>
+                  {proj.description && (
+                    <p className="text-slate-600 text-xs mt-1 whitespace-pre-line">{proj.description}</p>
+                  )}
                 </div>
               ))}
             </div>
           </section>
         )}
 
-        {/* Skills */}
-        {skills.length > 0 && (
-          <section>
-            <h2 
-              className="text-xs font-bold uppercase tracking-wider pl-2 mb-3 border-l-4"
-              style={{ color: accent, borderColor: accent }}
-            >
-              Skills
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {skills.map((skill, index) => (
-                <span key={index} className="text-xs text-slate-700 bg-slate-100 px-3 py-1 rounded-full">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </section>
-        )}
+        {/* Education and Skills side by side */}
+        <div className="grid grid-cols-2 gap-6">
+          {/* Education */}
+          {education.length > 0 && (
+            <section>
+              <h2 
+                className="text-sm font-bold mb-3"
+                style={{ color: accent }}
+              >
+                Education
+              </h2>
+              <div className="space-y-3">
+                {education.map((edu) => (
+                  <div key={edu.id}>
+                    <h3 className="font-bold text-slate-900 text-xs">
+                      {edu.degree || 'Degree'} {edu.field && `in ${edu.field}`}
+                    </h3>
+                    <p className="text-xs" style={{ color: accent }}>
+                      {edu.institution || 'Institution'}
+                    </p>
+                    <div className="flex gap-4 text-xs text-slate-400">
+                      {edu.startDate && <span>{edu.startDate}</span>}
+                      {edu.gpa && <span>GPA: {edu.gpa}</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Skills */}
+          {skills.length > 0 && (
+            <section>
+              <h2 
+                className="text-sm font-bold mb-3"
+                style={{ color: accent }}
+              >
+                Skills
+              </h2>
+              <div className="flex flex-wrap gap-1.5">
+                {skills.map((skill, index) => (
+                  <span 
+                    key={index} 
+                    className="text-xs text-white px-2 py-1 rounded"
+                    style={{ backgroundColor: accent }}
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
       </div>
     </div>
   );
