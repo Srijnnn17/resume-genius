@@ -12,7 +12,7 @@ export function ModernTemplate({ data, accentColor = 'green' }: TemplateProps) {
   const accent = accentColorMap[accentColor];
 
   return (
-    <div className="resume-paper text-[10px] leading-tight bg-white" style={{ fontFamily: 'Roboto, system-ui, sans-serif' }}>
+    <div className="resume-paper text-[10px] leading-tight bg-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       {/* Header with accent background */}
       <header className="p-5 text-white" style={{ backgroundColor: accent }}>
         <h1 className="text-xl font-bold">{personalInfo.fullName || 'Your Name'}</h1>

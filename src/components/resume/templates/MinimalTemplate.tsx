@@ -12,7 +12,7 @@ export function MinimalTemplate({ data, accentColor = 'green' }: TemplateProps) 
   const accent = accentColorMap[accentColor];
 
   return (
-    <div className="resume-paper p-6 text-[10px] leading-tight bg-white" style={{ fontFamily: 'Roboto, system-ui, sans-serif' }}>
+    <div className="resume-paper p-6 text-[10px] leading-tight bg-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       {/* Header */}
       <header className="mb-3">
         <h1 className="text-xl font-light tracking-tight" style={{ color: accent }}>
