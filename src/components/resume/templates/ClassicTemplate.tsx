@@ -12,25 +12,25 @@ export function ClassicTemplate({ data, accentColor = 'green' }: TemplateProps) 
   const accent = accentColorMap[accentColor];
 
   return (
-    <div className="resume-paper p-6 text-[10px] leading-tight bg-white" style={{ fontFamily: 'Roboto, system-ui, sans-serif' }}>
+    <div className="resume-paper p-6 text-[10px] leading-tight bg-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       {/* Header */}
-      <header className="border-b-2 pb-3 mb-3" style={{ borderColor: accent }}>
-        <h1 className="text-xl font-bold" style={{ color: accent }}>
+      <header className="text-center pb-2 mb-3 border-b-2" style={{ borderColor: accent }}>
+        <h1 className="text-2xl font-bold mb-1" style={{ color: accent }}>
           {personalInfo.fullName || 'Your Name'}
         </h1>
-        <div className="flex flex-wrap gap-3 mt-1.5 text-[9px] text-slate-600">
-          {personalInfo.email && <span>{personalInfo.email}</span>}
-          {personalInfo.phone && <span>{personalInfo.phone}</span>}
-          {personalInfo.location && <span>{personalInfo.location}</span>}
-          {personalInfo.linkedin && <span>{personalInfo.linkedin}</span>}
-          {personalInfo.website && <span>{personalInfo.website}</span>}
+        <div className="flex flex-wrap justify-center gap-3 text-[9px] text-slate-600">
+          {personalInfo.email && <span>✉ {personalInfo.email}</span>}
+          {personalInfo.phone && <span>📞 {personalInfo.phone}</span>}
+          {personalInfo.location && <span>📍 {personalInfo.location}</span>}
+          {personalInfo.linkedin && <span>🔗 {personalInfo.linkedin}</span>}
+          {personalInfo.website && <span>🌐 {personalInfo.website}</span>}
         </div>
       </header>
 
       {/* Summary */}
       {summary && (
         <section className="mb-3">
-          <h2 className="text-[10px] font-bold uppercase tracking-wide mb-1" style={{ color: accent }}>
+          <h2 className="text-[11px] font-bold uppercase tracking-wide mb-1" style={{ color: accent }}>
             Professional Summary
           </h2>
           <p className="text-slate-700 leading-snug">{summary}</p>
@@ -40,10 +40,10 @@ export function ClassicTemplate({ data, accentColor = 'green' }: TemplateProps) 
       {/* Experience */}
       {experiences.length > 0 && (
         <section className="mb-3">
-          <h2 className="text-[10px] font-bold uppercase tracking-wide mb-1.5" style={{ color: accent }}>
-            Experience
+          <h2 className="text-[11px] font-bold uppercase tracking-wide mb-1.5" style={{ color: accent }}>
+            Professional Experience
           </h2>
-          <div className="space-y-2">
+          <div className="space-y-2 border-l-2 pl-2" style={{ borderColor: accent }}>
             {experiences.map((exp) => (
               <div key={exp.id}>
                 <div className="flex justify-between items-baseline">
@@ -52,7 +52,7 @@ export function ClassicTemplate({ data, accentColor = 'green' }: TemplateProps) 
                     {exp.startDate || 'Start'} – {exp.isCurrent ? 'Present' : exp.endDate || 'End'}
                   </span>
                 </div>
-                <p className="text-slate-600 text-[9px]">
+                <p className="text-slate-600 text-[9px] font-medium">
                   {exp.company || 'Company'}{exp.location && ` · ${exp.location}`}
                 </p>
                 {exp.description && (
@@ -67,10 +67,10 @@ export function ClassicTemplate({ data, accentColor = 'green' }: TemplateProps) 
       {/* Projects */}
       {projects.length > 0 && (
         <section className="mb-3">
-          <h2 className="text-[10px] font-bold uppercase tracking-wide mb-1.5" style={{ color: accent }}>
+          <h2 className="text-[11px] font-bold uppercase tracking-wide mb-1.5" style={{ color: accent }}>
             Projects
           </h2>
-          <div className="space-y-2">
+          <div className="space-y-2 border-l-2 pl-2" style={{ borderColor: accent }}>
             {projects.map((proj) => (
               <div key={proj.id}>
                 <div className="flex justify-between items-baseline">
@@ -89,33 +89,37 @@ export function ClassicTemplate({ data, accentColor = 'green' }: TemplateProps) 
       {/* Education */}
       {education.length > 0 && (
         <section className="mb-3">
-          <h2 className="text-[10px] font-bold uppercase tracking-wide mb-1.5" style={{ color: accent }}>
+          <h2 className="text-[11px] font-bold uppercase tracking-wide mb-1.5" style={{ color: accent }}>
             Education
           </h2>
-          <table className="w-full text-[9px]">
-            <tbody>
-              {education.map((edu) => (
-                <tr key={edu.id} className="border-b border-slate-100">
-                  <td className="py-0.5 font-medium text-slate-900">
+          <div className="space-y-1.5">
+            {education.map((edu) => (
+              <div key={edu.id} className="flex justify-between items-start">
+                <div>
+                  <p className="font-semibold text-slate-900">
                     {edu.degree || 'Degree'}{edu.field && ` in ${edu.field}`}
-                  </td>
-                  <td className="py-0.5 text-slate-600">{edu.institution || 'Institution'}</td>
-                  <td className="py-0.5 text-slate-500">{edu.endDate || 'End'}</td>
-                  <td className="py-0.5 text-slate-500">{edu.gpa && `GPA: ${edu.gpa}`}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </p>
+                  <p className="text-slate-600 text-[9px]">{edu.institution || 'Institution'}</p>
+                  {edu.gpa && <p className="text-slate-500 text-[9px]">GPA: {edu.gpa}</p>}
+                </div>
+                <span className="text-[9px] text-slate-500">{edu.endDate || ''}</span>
+              </div>
+            ))}
+          </div>
         </section>
       )}
 
       {/* Skills */}
       {skills.length > 0 && (
         <section>
-          <h2 className="text-[10px] font-bold uppercase tracking-wide mb-1" style={{ color: accent }}>
-            Skills
+          <h2 className="text-[11px] font-bold uppercase tracking-wide mb-1" style={{ color: accent }}>
+            Core Skills
           </h2>
-          <p className="text-slate-700">{skills.join(', ')}</p>
+          <p className="text-slate-700">
+            {skills.map((skill, i) => (
+              <span key={i}>• {skill}{i < skills.length - 1 ? '  ' : ''}</span>
+            ))}
+          </p>
         </section>
       )}
     </div>
