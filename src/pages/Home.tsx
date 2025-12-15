@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Sparkles, Zap, Target, LogIn, LogOut, ArrowRight, CheckCircle, Mail, Instagram } from 'lucide-react';
+import { Sparkles, Zap, Target, ArrowRight, CheckCircle, Instagram } from 'lucide-react';
+import { Header } from '@/components/Header';
+import { AnnouncementBar } from '@/components/AnnouncementBar';
+import { useAuth } from '@/contexts/AuthContext';
 import srijanProfile from '@/assets/srijan-profile.jpg';
 
 export default function Home() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
 
   const features = [
     { icon: Sparkles, title: 'AI-Powered', description: 'Enhance your bullet points with AI suggestions' },
@@ -24,82 +26,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background font-['Inter']">
       {/* Announcement Bar */}
-      <div className="sticky top-0 z-[60] bg-gradient-to-r from-blue-100 via-sky-100 to-indigo-100 dark:from-blue-900/30 dark:via-sky-900/30 dark:to-indigo-900/30 shadow-sm">
-        <div className="container flex items-center justify-center h-9 px-4">
-          <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide bg-blue-600 text-white rounded-full">
-              New
-            </span>
-            <span className="text-sm font-medium text-blue-900 dark:text-blue-200">
-              AI Feature Added
-            </span>
-          </div>
-        </div>
-      </div>
+      <AnnouncementBar />
 
       {/* Header */}
-      <header className="sticky top-9 z-50 border-b border-border/50 bg-background/95 backdrop-blur-md">
-        <div className="container flex items-center justify-between h-16 px-4">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-md group-hover:shadow-lg transition-shadow">
-              <FileText className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-              ResumeAI
-            </span>
-          </Link>
-
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8">
-            <button
-              onClick={() => scrollToSection('hero')}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Home
-            </button>
-            <button
-              onClick={() => scrollToSection('features')}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Features
-            </button>
-            <button
-              onClick={() => scrollToSection('contact')}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Contact
-            </button>
-          </nav>
-
-          {/* Auth Button */}
-          <div className="flex items-center">
-            {user ? (
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={signOut}
-                className="rounded-full px-5 border-border/60 hover:bg-muted/50"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Sign Out
-              </Button>
-            ) : (
-              <Button 
-                asChild 
-                variant="outline" 
-                size="sm"
-                className="rounded-full px-5 border-border/60 hover:bg-muted/50"
-              >
-                <Link to="/auth">
-                  <LogIn className="h-4 w-4 mr-2" />
-                  Sign In
-                </Link>
-              </Button>
-            )}
-          </div>
-        </div>
-      </header>
+      <Header showNav onScrollToSection={scrollToSection} />
 
       {/* Hero Section */}
       <section id="hero" className="relative overflow-hidden py-20 lg:py-32">

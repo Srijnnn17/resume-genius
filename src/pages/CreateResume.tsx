@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Upload, Plus, LogIn, LogOut, User, ArrowLeft, Layout, Minimize2, Palette, Clock, Trash2 } from 'lucide-react';
+import { FileText, Upload, Plus, Layout, Minimize2, Palette, Clock, Trash2 } from 'lucide-react';
 import { fetchUserResumes, deleteResume, SavedResume } from '@/services/resumeService';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { Header } from '@/components/Header';
+import { AnnouncementBar } from '@/components/AnnouncementBar';
 
 export type TemplateType = 'minimal' | 'modern' | 'classic';
 
@@ -32,7 +34,7 @@ const templates: { id: TemplateType; name: string; description: string; icon: Re
 ];
 
 export default function CreateResume() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>('modern');
   const [savedResumes, setSavedResumes] = useState<SavedResume[]>([]);
@@ -81,49 +83,12 @@ export default function CreateResume() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background font-['Inter']">
+      {/* Announcement Bar */}
+      <AnnouncementBar />
+
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
-        <div className="container flex items-center justify-between h-16 px-4">
-          <div className="flex items-center gap-3">
-            <Button asChild variant="ghost" size="icon">
-              <Link to="/">
-                <ArrowLeft className="h-5 w-5" />
-              </Link>
-            </Button>
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary">
-                <FileText className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold text-foreground">ResumeAI</h1>
-                <p className="text-xs text-muted-foreground">Create Your Resume</p>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            {user ? (
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-muted-foreground hidden sm:flex items-center gap-1">
-                  <User className="h-4 w-4" />
-                  {user.email}
-                </span>
-                <Button variant="outline" size="sm" onClick={signOut}>
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
-                </Button>
-              </div>
-            ) : (
-              <Button asChild variant="outline" size="sm">
-                <Link to="/auth">
-                  <LogIn className="h-4 w-4 mr-2" />
-                  Sign In
-                </Link>
-              </Button>
-            )}
-          </div>
-        </div>
-      </header>
+      <Header showBackButton backTo="/" />
 
       {/* Main Content */}
       <main className="container px-4 py-12">
