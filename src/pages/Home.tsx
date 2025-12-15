@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Sparkles, Zap, Target, LogIn, LogOut, ArrowRight, CheckCircle, Mail, Phone, MapPin, User } from 'lucide-react';
+import { FileText, Sparkles, Zap, Target, LogIn, LogOut, ArrowRight, CheckCircle, Mail, Instagram } from 'lucide-react';
+import srijanProfile from '@/assets/srijan-profile.jpg';
 
 export default function Home() {
   const { user, signOut } = useAuth();
@@ -23,13 +24,13 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background font-['Inter']">
       {/* Announcement Bar */}
-      <div className="sticky top-0 z-[60] bg-gradient-to-r from-emerald-100 via-green-100 to-teal-100 dark:from-emerald-900/30 dark:via-green-900/30 dark:to-teal-900/30 shadow-sm">
+      <div className="sticky top-0 z-[60] bg-gradient-to-r from-blue-100 via-sky-100 to-indigo-100 dark:from-blue-900/30 dark:via-sky-900/30 dark:to-indigo-900/30 shadow-sm">
         <div className="container flex items-center justify-center h-9 px-4">
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide bg-emerald-500 text-white rounded-full">
+            <span className="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide bg-blue-600 text-white rounded-full">
               New
             </span>
-            <span className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
+            <span className="text-sm font-medium text-blue-900 dark:text-blue-200">
               AI Feature Added
             </span>
           </div>
@@ -203,33 +204,59 @@ export default function Home() {
       {/* Contact Section */}
       <section id="contact" className="py-20 bg-muted/20">
         <div className="container px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-8">Contact</h2>
-            <div className="bg-card border border-border/50 rounded-2xl p-8 shadow-sm">
-              <div className="flex items-center justify-center mb-6">
-                <div className="p-3 rounded-full bg-primary/10">
-                  <User className="h-6 w-6 text-primary" />
+          <div className="max-w-md mx-auto">
+            <h2 className="text-3xl font-bold mb-8 text-center">Contact</h2>
+            <div className="bg-gradient-to-br from-blue-50 via-sky-50 to-indigo-100 dark:from-blue-950/50 dark:via-sky-950/50 dark:to-indigo-950/50 rounded-2xl p-6 shadow-xl shadow-blue-200/40 dark:shadow-blue-900/20">
+              {/* Top Section with Photo and Info */}
+              <div className="flex items-center gap-5 mb-6">
+                {/* Profile Photo */}
+                <div className="flex-shrink-0">
+                  <img 
+                    src={srijanProfile} 
+                    alt="Srijan" 
+                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
+                  />
                 </div>
-              </div>
-              <h3 className="text-xl font-semibold mb-6">Developer: Srijan</h3>
-              <div className="space-y-4">
-                <div className="flex items-center justify-center gap-3 text-muted-foreground">
-                  <Mail className="h-5 w-5 text-primary" />
-                  <a href="mailto:srijannn17@gmail.com" className="hover:text-foreground transition-colors">
+                {/* Info */}
+                <div className="text-left">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400 mb-1">
+                    Developer
+                  </p>
+                  <h3 className="text-2xl font-bold text-foreground mb-1">
+                    Srijan
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
                     srijannn17@gmail.com
-                  </a>
-                </div>
-                <div className="flex items-center justify-center gap-3 text-muted-foreground">
-                  <Phone className="h-5 w-5 text-primary" />
-                  <a href="tel:+918210476610" className="hover:text-foreground transition-colors">
-                    +91 8210476610
-                  </a>
-                </div>
-                <div className="flex items-center justify-center gap-3 text-muted-foreground">
-                  <MapPin className="h-5 w-5 text-primary" />
-                  <span>Ranchi, India</span>
+                  </p>
                 </div>
               </div>
+
+              {/* Social Links */}
+              <div className="flex items-center gap-6 mb-6 pl-1">
+                <div className="flex items-center gap-2">
+                  <Instagram className="h-4 w-4 text-pink-500" />
+                  <div>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Instagram</p>
+                    <a 
+                      href="https://instagram.com/srijannn17" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium text-foreground hover:text-blue-600 transition-colors"
+                    >
+                      @srijannn17
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Contact Button */}
+              <a 
+                href="mailto:srijannn17@gmail.com"
+                className="flex items-center justify-center gap-2 w-full py-3 bg-white dark:bg-background rounded-lg text-sm font-semibold text-foreground uppercase tracking-wide hover:bg-gray-50 dark:hover:bg-muted transition-colors border border-border/30 shadow-sm"
+              >
+                Contact Me
+                <ArrowRight className="h-4 w-4" />
+              </a>
             </div>
           </div>
         </div>
