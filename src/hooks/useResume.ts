@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { ResumeData, PersonalInfo, Experience, Education } from '@/types/resume';
+import { ResumeData, PersonalInfo, Experience, Education, Project } from '@/types/resume';
 import { v4 as uuidv4 } from 'uuid';
 
 const initialPersonalInfo: PersonalInfo = {
@@ -15,6 +15,7 @@ const initialResume: ResumeData = {
   personalInfo: initialPersonalInfo,
   summary: '',
   experiences: [],
+  projects: [],
   education: [],
   skills: [],
 };
@@ -64,6 +65,37 @@ export function useResume() {
     setResume(prev => ({
       ...prev,
       experiences: prev.experiences.filter(exp => exp.id !== id),
+    }));
+  }, []);
+
+  const addProject = useCallback(() => {
+    const newProject: Project = {
+      id: uuidv4(),
+      name: '',
+      techStack: '',
+      description: '',
+      date: '',
+    };
+    setResume(prev => ({
+      ...prev,
+      projects: [...prev.projects, newProject],
+    }));
+    return newProject.id;
+  }, []);
+
+  const updateProject = useCallback((id: string, data: Partial<Project>) => {
+    setResume(prev => ({
+      ...prev,
+      projects: prev.projects.map(proj =>
+        proj.id === id ? { ...proj, ...data } : proj
+      ),
+    }));
+  }, []);
+
+  const removeProject = useCallback((id: string) => {
+    setResume(prev => ({
+      ...prev,
+      projects: prev.projects.filter(proj => proj.id !== id),
     }));
   }, []);
 
@@ -128,6 +160,9 @@ export function useResume() {
     addExperience,
     updateExperience,
     removeExperience,
+    addProject,
+    updateProject,
+    removeProject,
     addEducation,
     updateEducation,
     removeEducation,

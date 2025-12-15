@@ -28,10 +28,19 @@ export interface Education {
   gpa?: string;
 }
 
+export interface Project {
+  id: string;
+  name: string;
+  techStack: string;
+  description: string;
+  date: string;
+}
+
 export interface ResumeData {
   personalInfo: PersonalInfo;
   summary: string;
   experiences: Experience[];
+  projects: Project[];
   education: Education[];
   skills: string[];
 }

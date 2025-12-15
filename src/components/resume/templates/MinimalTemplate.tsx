@@ -8,11 +8,11 @@ interface TemplateProps {
 }
 
 export function MinimalTemplate({ data, accentColor = 'green' }: TemplateProps) {
-  const { personalInfo, summary, experiences, education, skills } = data;
+  const { personalInfo, summary, experiences, projects, education, skills } = data;
   const accent = accentColorMap[accentColor];
 
   return (
-    <div className="resume-paper p-8 font-sans text-sm leading-relaxed bg-white" style={{ fontFamily: 'system-ui, sans-serif' }}>
+    <div className="resume-paper p-8 text-sm leading-relaxed bg-white" style={{ fontFamily: 'Roboto, system-ui, sans-serif' }}>
       {/* Header */}
       <header className="mb-6">
         <h1 className="text-3xl font-light tracking-tight" style={{ color: accent }}>
@@ -83,6 +83,33 @@ export function MinimalTemplate({ data, accentColor = 'green' }: TemplateProps) 
                 </p>
                 {exp.description && (
                   <p className="text-slate-600 text-xs mt-1 whitespace-pre-line">{exp.description}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Projects */}
+      {projects.length > 0 && (
+        <section className="mb-6">
+          <h2 
+            className="text-xs font-semibold uppercase tracking-wider mb-3"
+            style={{ color: accent }}
+          >
+            Projects
+          </h2>
+          <div className="space-y-4">
+            {projects.map((proj) => (
+              <div key={proj.id}>
+                <div className="flex justify-between items-baseline">
+                  <h3 className="font-medium text-slate-900 text-sm">{proj.name || 'Project Name'}</h3>
+                  {proj.date && (
+                    <span className="text-xs text-slate-400">{proj.date}</span>
+                  )}
+                </div>
+                {proj.description && (
+                  <p className="text-slate-600 text-xs mt-1 whitespace-pre-line">{proj.description}</p>
                 )}
               </div>
             ))}
